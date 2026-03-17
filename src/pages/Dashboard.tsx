@@ -140,17 +140,17 @@ export default function Dashboard() {
       </div>
 
       {/* Pending Review */}
-      {coachData.filter(d => d.coach.status === 'pending_review').length > 0 && (
+      {coachData.filter(d => d.coach.status === 'pending_review' && !(d.coach.first_name === 'Pending' && d.coach.last_name === 'Invite')).length > 0 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-gray-900">Pending Review</h2>
             <span className="text-xs font-medium bg-amber-100 text-amber-700 rounded-full px-2.5 py-0.5">
-              {coachData.filter(d => d.coach.status === 'pending_review').length} awaiting approval
+              {coachData.filter(d => d.coach.status === 'pending_review' && !(d.coach.first_name === 'Pending' && d.coach.last_name === 'Invite')).length} awaiting approval
             </span>
           </div>
           <div className="divide-y divide-gray-100">
             {coachData
-              .filter(d => d.coach.status === 'pending_review')
+              .filter(d => d.coach.status === 'pending_review' && !(d.coach.first_name === 'Pending' && d.coach.last_name === 'Invite'))
               .map(({ coach }) => (
                 <Link
                   key={coach.id}
