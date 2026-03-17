@@ -157,17 +157,17 @@ export default function Dashboard() {
                   to={`/coaches/${coach.id}`}
                   className="flex items-center justify-between py-3 hover:bg-gray-50 -mx-4 px-4 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#1B2B4B] flex items-center justify-center text-white text-xs font-semibold">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1B2B4B] flex items-center justify-center text-white text-xs font-semibold">
                       {coach.first_name[0]}{coach.last_name[0]}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{coach.first_name} {coach.last_name}</p>
-                      <p className="text-xs text-gray-500">{coach.role} · {coach.team_years.join(', ')}</p>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{coach.first_name} {coach.last_name}</p>
+                      <p className="text-xs text-gray-500 truncate">{coach.role} · {coach.team_years.join(', ')}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400">
+                  <div className="flex-shrink-0 flex items-center gap-2 ml-2">
+                    <span className="text-xs text-gray-400 hidden sm:inline">
                       Registered {coach.created_at ? new Date(coach.created_at).toLocaleDateString('en-GB') : '—'}
                     </span>
                     <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
