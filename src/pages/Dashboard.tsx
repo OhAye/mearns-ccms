@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Coach, Certification, PVGRecord, OnboardingStep, CoachComplianceData, ComplianceStatus } from '../lib/types'
 import { computeComplianceStatus } from '../lib/compliance'
@@ -151,9 +152,9 @@ export default function Dashboard() {
             {coachData
               .filter(d => d.coach.status === 'pending_review')
               .map(({ coach }) => (
-                <a
+                <Link
                   key={coach.id}
-                  href={`/coaches/${coach.id}`}
+                  to={`/coaches/${coach.id}`}
                   className="flex items-center justify-between py-3 hover:bg-gray-50 -mx-4 px-4 transition-colors"
                 >
                   <div className="flex items-center gap-3">
@@ -173,7 +174,7 @@ export default function Dashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
-                </a>
+                </Link>
               ))}
           </div>
         </Card>
