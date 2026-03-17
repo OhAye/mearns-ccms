@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { Coach } from '../lib/types'
 import { createInvite, revokeInvite } from '../hooks/useCoaches'
@@ -22,6 +22,7 @@ export default function Invite() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [revoking, setRevoking] = useState<string | null>(null)
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   const fetchInvites = useCallback(async () => {
     setLoading(true)
@@ -162,32 +163,24 @@ export default function Invite() {
       </Card>
 
       {/* Pending invites table */}
-      <Card padding={false}>
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base font-semibold text-gray-900">Pending Invites</h2>
-        </div>
-        {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#1B2B4B]" />
-          </div>
-        ) : invites.length === 0 ? (
-          <div className="px-6 py-8 text-center text-sm text-gray-500">
-            No invites found. Generate one above to get started.
-          </div>
-        ) : (
+      {(() => {
+        const pending = invites.filter(i => getInviteStatus(i) === 'pending')
+        const expired = invites.filter(i => getInviteStatus(i) === 'expired')
+
+        const InviteTable = ({ rows, showRevoke }: { rows: Coach[]; showRevoke: boolean }) => (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Token</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Created</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Expires</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{showRevoke ? 'Expires' : 'Revoked / Expired'}</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                  <th className="px-4 py-3 w-20" />
+                  {showRevoke && <th className="px-4 py-3 w-20" />}
                 </tr>
               </thead>
               <tbody>
-                {invites.map((invite) => {
+                {rows.map((invite) => {
                   const status = getInviteStatus(invite)
                   return (
                     <tr key={invite.id} className="border-t border-gray-100">
@@ -205,14 +198,12 @@ export default function Invite() {
                           : '—'}
                       </td>
                       <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${statusStyles[status]}`}
-                        >
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${statusStyles[status]}`}>
                           {status}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
-                        {status === 'pending' && (
+                      {showRevoke && (
+                        <td className="px-4 py-3">
                           <button
                             onClick={() => handleRevoke(invite)}
                             disabled={revoking === invite.id}
@@ -220,16 +211,58 @@ export default function Invite() {
                           >
                             Revoke
                           </button>
-                        )}
-                      </td>
+                        </td>
+                      )}
                     </tr>
                   )
                 })}
               </tbody>
             </table>
           </div>
-        )}
-      </Card>
+        )
+
+        return (
+          <>
+            <Card padding={false}>
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h2 className="text-base font-semibold text-gray-900">Pending Invites</h2>
+              </div>
+              {loading ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#1B2B4B]" />
+                </div>
+              ) : pending.length === 0 ? (
+                <div className="px-6 py-8 text-center text-sm text-gray-500">
+                  No pending invites. Generate one above to get started.
+                </div>
+              ) : (
+                <InviteTable rows={pending} showRevoke={true} />
+              )}
+            </Card>
+
+            {expired.length > 0 && (
+              <Card padding={false}>
+                <button
+                  onClick={() => setHistoryOpen(o => !o)}
+                  className="w-full flex items-center justify-between px-6 py-4 text-left"
+                >
+                  <span className="text-base font-semibold text-gray-900">
+                    Invite History
+                    <span className="ml-2 text-xs font-normal text-gray-400">({expired.length})</span>
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 transition-transform ${historyOpen ? 'rotate-180' : ''}`}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {historyOpen && <InviteTable rows={expired} showRevoke={false} />}
+              </Card>
+            )}
+          </>
+        )
+      })()}
     </div>
   )
 }

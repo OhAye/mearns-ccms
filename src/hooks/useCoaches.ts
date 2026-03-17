@@ -104,7 +104,7 @@ export async function createInvite(): Promise<{
 export async function revokeInvite(id: string) {
   const { error } = await supabase
     .from('coaches')
-    .update({ invite_token_expires_at: new Date(0).toISOString() })
+    .update({ invite_token_expires_at: new Date().toISOString() })
     .eq('id', id)
   return { error }
 }
