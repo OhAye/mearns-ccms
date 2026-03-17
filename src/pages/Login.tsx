@@ -29,7 +29,7 @@ export default function Login() {
         {/* Logo & branding */}
         <div className="text-center mb-8">
           <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 mx-auto shadow-lg">
-            <img src="/logo.png" alt="Mearns Football Academy" className="w-20 h-20 object-contain" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Mearns Football Academy" className="w-20 h-20 object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-white">Mearns Football Academy</h1>
           <p className="text-white/60 text-sm mt-1">Coach Compliance Management System</p>

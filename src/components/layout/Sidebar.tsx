@@ -71,7 +71,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Logo / Club name */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
           <div className="flex-shrink-0 w-9 h-9 rounded-full bg-white flex items-center justify-center">
-            <img src="/logo.png" alt="Mearns Football Academy" className="w-7 h-7 object-contain" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Mearns Football Academy" className="w-7 h-7 object-contain" />
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-tight">Mearns Football</p>
