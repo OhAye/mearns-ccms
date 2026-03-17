@@ -41,15 +41,15 @@ export function StatCard({ title, value, icon, color = 'navy', subtitle }: StatC
   }
 
   return (
-    <div className={`rounded-xl p-6 ${colorClasses[color]} shadow-sm`}>
+    <div className={`rounded-xl p-4 sm:p-6 ${colorClasses[color]} shadow-sm`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className={`text-sm font-medium opacity-80 mb-1`}>{title}</p>
-          <p className="text-3xl font-bold">{value}</p>
-          {subtitle && <p className="text-xs mt-1 opacity-60">{subtitle}</p>}
+          <p className={`text-xs sm:text-sm font-medium opacity-80 mb-1`}>{title}</p>
+          <p className="text-2xl sm:text-3xl font-bold">{value}</p>
+          {subtitle && <p className="text-xs mt-1 opacity-60 hidden sm:block">{subtitle}</p>}
         </div>
         {icon && (
-          <div className={`p-2 rounded-lg ${iconColorClasses[color]}`}>{icon}</div>
+          <div className={`p-1.5 sm:p-2 rounded-lg ${iconColorClasses[color]}`}>{icon}</div>
         )}
       </div>
     </div>
