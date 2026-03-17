@@ -50,7 +50,7 @@ export default function Invite() {
       addToast('Failed to generate invite: ' + (error ?? 'Unknown error'), 'error')
       return
     }
-    const link = `${window.location.origin}/register/${data.invite_token}`
+    const link = `${window.location.origin}${window.location.pathname}#/register/${data.invite_token}`
     setGeneratedLink(link)
     fetchInvites()
   }
